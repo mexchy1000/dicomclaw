@@ -1,156 +1,224 @@
-# DICOMclaw
+<p align="center">
+  <h1 align="center">DICOMclaw</h1>
+  <p align="center">
+    <strong>An agentic AI framework for PET imaging</strong><br>
+    Explores whole-body scans, integrates multimodal patient data, and quantitatively<br>
+    characterizes tumor metabolism, tracer distribution, and treatment response.
+  </p>
+  <p align="center">
+    <a href="#quick-start">Quick Start</a> · <a href="INSTALL.md">Install Guide</a> · <a href="#skills">Skills</a> · <a href="#license">License</a>
+  </p>
+</p>
 
-Chat-driven PET/CT quantitative analysis platform. Combines an LLM-powered ReAct agent with a full DICOM viewer for interactive medical image analysis.
+---
+
+## Why DICOMclaw?
+
+Traditional PET/CT workflows involve switching between multiple tools — viewers, segmentation software, spreadsheets, and reporting systems. **DICOMclaw unifies everything into a single interactive workspace** where you converse with an AI agent that sees what you see, operates directly on your imaging data, and presents results back into the viewer in real time.
+
+> *"Segment the liver and calculate SUV"* → The agent plans, segments, quantifies, overlays the result on your viewer, and summarizes — all in one conversation turn.
+
+### Key Principles
+
+- **Interactive** — Draw VOIs, click anatomy, mention `@VOI1` in chat; the agent responds with context-aware analysis
+- **Transparent** — Every agent action shows reasoning, plan approval, and progress; nothing runs without your confirmation
+- **Extensible** — Add new analysis skills as Python classes; control agent behavior by editing markdown guides — no code changes needed
+
+---
 
 ## Features
 
-- **DICOM Viewer** — Cornerstone3D-based 2x2 grid (CT / PET / Fusion / MIP) with W/L presets, PET colormaps, slice sync, and orientation switching
-- **VOI Overlay** — Segmentation contours rendered as SVG overlays on CT/Fusion viewports, with label badges and quantitative popups
-- **Interactive VOI Drawing** — Draw spherical VOIs on PET/Fusion, apply SUV threshold refinement, drag to reposition
-- **Agent Mode** — ReAct agent with plan approval UI; auto-discovers analysis skills with markdown-based guides
-- **Chat Mode** — Direct VLM conversation with current viewport snapshots (no agent loop)
-- **@ VOI Mention** — Reference VOIs in chat with autocomplete; VOI context injected into messages
-- **Lesion Detection** — AutoPET-3 (nnU-Net) full-body lesion segmentation with SUV quantification
-- **Organ Segmentation** — TotalSegmentator-based organ segmentation with viewer overlay
-- **Texture Analysis** — Radiomics-style feature extraction (GLCM, shape, first-order) with configurable parameters
-- **Report Generation** — Structured analysis reports from accumulated results
+<table>
+<tr>
+<td width="50%">
+
+### Viewer
+- 2×2 grid: **CT / PET / Fusion / MIP**
+- W/L presets, PET colormaps (`2hot`, `hsv`, `hot_iron`...)
+- Slice sync, orientation switching (axial / sagittal / coronal)
+- Interactive VOI sphere drawing with SUV threshold refinement
+- Click-to-navigate on MIP (ray-traced max voxel)
+
+</td>
+<td width="50%">
+
+### Agent
+- **ReAct loop** with plan approval before multi-step analyses
+- 10 auto-discovered skills with **markdown-based guides**
+- Real-time progress, reasoning steps, and overlay emission
+- Automatic clinical context extraction from DICOM headers
+- VOI-aware: reference `@VOI1` in chat for targeted analysis
+
+</td>
+</tr>
+<tr>
+<td>
+
+### Quantification
+- **AutoPET-3** (nnU-Net) whole-body lesion detection
+- **TotalSegmentator** organ segmentation (117 structures)
+- SUV statistics (mean, max, percentiles, TLG, MTV)
+- Radiomics texture features (GLCM 2D/3D, shape, first-order)
+- Cross-timepoint lesion tracking and comparison
+
+</td>
+<td>
+
+### Interaction Modes
+- **Agent Mode** — Full ReAct loop with skill execution and plan approval
+- **Chat Mode** — Direct VLM conversation using viewport snapshots
+- **@ VOI Mention** — Autocomplete VOI references; context auto-injected
+- **VOI Drawing** — Click/drag on PET/Fusion → sphere VOI → threshold menu
+- **MIP Click** — Ray-traced navigation to max-intensity voxel
+
+</td>
+</tr>
+</table>
+
+---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  React 18 + Vite (Cornerstone3D viewer + Chat UI)   │
-└────────────────────┬────────────────────────────────┘
-                     │ Socket.io + REST
-┌────────────────────┴────────────────────────────────┐
-│  Node.js (Express + Socket.io) — port 8411          │
-│  SQLite (better-sqlite3) · WADO-URI · VLM client    │
-└────────────────────┬────────────────────────────────┘
-                     │ subprocess (stdin/stdout/stderr)
-┌────────────────────┴────────────────────────────────┐
-│  Python ReAct Agent (analysis/local_agent.py)        │
-│  10 auto-discovered skills with markdown guides      │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│   React 18 + Vite                                        │
+│   Cornerstone3D Viewer  ·  Chat UI  ·  Plan Approval     │
+└───────────────────────┬──────────────────────────────────┘
+                        │  Socket.io + REST
+┌───────────────────────┴──────────────────────────────────┐
+│   Node.js  (Express + Socket.io)                         │
+│   SQLite  ·  WADO-URI  ·  VLM Client  ·  Session Mgmt   │
+└───────────────────────┬──────────────────────────────────┘
+                        │  subprocess (stdin / stdout / stderr)
+┌───────────────────────┴──────────────────────────────────┐
+│   Python ReAct Agent                                     │
+│   10 Skills  ·  Markdown Guides  ·  Clinical Context     │
+│                                                          │
+│   AutoPET-3  ·  TotalSegmentator  ·  Radiomics  ·  VLM  │
+└──────────────────────────────────────────────────────────┘
 ```
 
-- **Backend**: Node.js (Express + Socket.io) on port 8411
-- **Frontend**: React 18 + Vite (dev on 5173, production served by Express)
-- **Agent**: Python ReAct loop spawned per message, communicates via `[REACT:*]` stderr markers
-- **LLM**: OpenRouter API — separate models for agent, vision, and chat
-- **DB**: SQLite at `data/dicomclaw.db`
-- **Viewer**: Cornerstone3D v4.18 with VolumeViewports
+| Layer | Stack | Role |
+|-------|-------|------|
+| **Frontend** | React 18, Vite, Cornerstone3D v4.18 | DICOM viewer, chat, VOI interaction |
+| **Backend** | Node.js, Express, Socket.io, better-sqlite3 | API, sessions, WADO-URI, VLM proxy |
+| **Agent** | Python, ReAct loop, OpenRouter LLM | Reasoning, skill orchestration, plan approval |
+| **Models** | AutoPET-3 (nnU-Net), TotalSegmentator, VLM | Lesion detection, organ segmentation, interpretation |
 
-## Directory Structure
-
-```
-src/                  # Node.js TypeScript backend
-  channels/           #   Express routes + Socket.io handlers
-  dicom/              #   WADO-URI provider
-analysis/             # Python agent + skills + utils
-  skills/             #   Auto-discovered analysis skills (BaseSkill subclasses)
-  skills/guides/      #   Markdown skill guides (injected into agent prompt)
-  utils/              #   DICOM processing, SUV, MIP, segmentation, contours
-  bootstrap/          #   DICOM study indexer
-web-ui/               # React frontend
-  src/hooks/          #   React hooks (viewer, overlays, chat, settings, etc.)
-  src/components/     #   UI components (viewer, chat, panels, worklist)
-data/studies/         # DICOM data (gitignored)
-results/              # Per-study analysis outputs (plots, tables, masks)
-weights/              # ML model weights (gitignored)
-```
+---
 
 ## Quick Start
 
 ```bash
-# Install dependencies
-npm install
-cd web-ui && npm install && cd ..
+# 1. Install
+npm install && cd web-ui && npm install && cd ..
 
-# Configure
-cp .env.example .env   # edit with your OpenRouter API key
+# 2. Configure
+cp .env.example .env          # add your OpenRouter API key
 
-# Build & run
+# 3. Build
 npm run build && npm run build:ui
-npm start              # http://localhost:8411
+
+# 4. Run
+npm start                      # → http://localhost:8411
 ```
 
-See [INSTALL.md](INSTALL.md) for full setup including Python environment, GPU, and model weights.
+> **GPU models (AutoPET-3, TotalSegmentator)** require additional setup.
+> See **[INSTALL.md](INSTALL.md)** for Python environment, CUDA, and model weight instructions.
 
-## Commands
+---
 
-```bash
-npm run build         # Compile TypeScript backend
-npm run build:ui      # Build React frontend
-npm start             # Run server (port 8411)
-npm run dev           # Dev server with hot reload
-npm run dev:ui        # Vite dev server (port 5173, proxies to 8411)
-```
+## Skills
+
+Skills are auto-discovered from `analysis/skills/*.py` and controlled by markdown guides in `analysis/skills/guides/`.
+
+| Skill | What it does |
+|-------|-------------|
+| `scan_dicom` | Discover series, extract metadata, auto-select best CT/PET |
+| `generate_mip` | MIP images from PET (4 rotational angles) |
+| `calc_suv` | Organ SUV statistics via TotalSegmentator |
+| `segment_organ` | Organ segmentation with viewer overlay |
+| `quantify_lesion` | AutoPET-3 lesion detection + SUV quantification |
+| `extract_texture` | Radiomics features — GLCM (2D/3D), shape, first-order |
+| `analyze_voi` | Detailed VOI stats, histogram, axial intensity profile |
+| `compare_studies` | Cross-timepoint lesion tracking and response assessment |
+| `vision_interpret` | VLM-based image interpretation (MIP, lesion, VOI snapshots) |
+| `generate_report` | Structured markdown report from all accumulated results |
+
+### Markdown Skill Guides
+
+Each skill has a companion guide (`analysis/skills/guides/<skill>.md`) injected into the agent's system prompt at runtime. Guides define:
+
+- **When** the agent should use the skill
+- **Parameters** with types, defaults, and constraints
+- **Workflow patterns** (e.g., "always propose a plan before texture extraction")
+- **Decision rules** (e.g., TotalSegmentator organ name validation)
+
+**Edit a markdown file → agent behavior changes immediately.** No code changes, no restart.
+
+---
 
 ## Configuration
 
 Environment variables (`.env`):
 
 | Variable | Default | Description |
-|---|---|---|
-| `OPENROUTER_API_KEY` | (required) | OpenRouter API key |
-| `OPENROUTER_MODEL` | `z-ai/glm-5` | Agent text model |
-| `VISION_MODEL` | `moonshotai/kimi-k2.5` | Vision model for image interpretation |
-| `CHAT_MODEL` | `google/gemini-3.1-flash-lite-preview` | Chat mode model |
+|----------|---------|-------------|
+| `OPENROUTER_API_KEY` | *(required)* | OpenRouter API key |
+| `OPENROUTER_MODEL` | `z-ai/glm-5` | Agent reasoning model |
+| `VISION_MODEL` | `moonshotai/kimi-k2.5` | Vision interpretation model |
+| `CHAT_MODEL` | `google/gemini-3.1-flash-lite-preview` | Direct chat model |
 | `PORT` | `8411` | Server port |
-| `AGENT_TIMEOUT` | `3600000` | Agent subprocess timeout (ms) |
 
-All models are configurable via the Settings UI at runtime.
+All models are also configurable via the **Settings UI** at runtime.
 
-## Skills
+---
 
-Skills are auto-discovered from `analysis/skills/*.py`. Each extends `BaseSkill` and has a corresponding markdown guide in `analysis/skills/guides/` that controls agent behavior:
+## Project Structure
 
-| Skill | Description |
-|---|---|
-| `scan_dicom` | Scan studies, extract metadata, select best CT/PET series |
-| `generate_mip` | Generate MIP images from PET series (4 angles) |
-| `calc_suv` | Calculate organ SUV statistics via TotalSegmentator |
-| `segment_organ` | Organ segmentation (TotalSegmentator) with viewer overlay |
-| `quantify_lesion` | AutoPET-3 lesion detection with SUV quantification |
-| `extract_texture` | Radiomics texture features (GLCM, shape, first-order) |
-| `analyze_voi` | Detailed VOI analysis (histogram, percentiles, profiles) |
-| `compare_studies` | Cross-timepoint lesion comparison |
-| `vision_interpret` | VLM-based image interpretation |
-| `generate_report` | Structured analysis report from accumulated results |
+```
+src/                      # Node.js TypeScript backend
+  channels/               #   Express routes + Socket.io handlers
+  dicom/                  #   WADO-URI DICOM provider
+analysis/                 # Python agent + skills
+  skills/                 #   Auto-discovered analysis skills
+  skills/guides/          #   Markdown skill guides (→ agent prompt)
+  utils/                  #   DICOM processing, SUV, MIP, contours
+  bootstrap/              #   DICOM study indexer
+web-ui/                   # React frontend
+  src/hooks/              #   Viewer, overlays, chat, settings hooks
+  src/components/         #   Viewer, chat, panels, worklist components
+data/studies/             # DICOM data (gitignored)
+results/                  # Analysis outputs (gitignored)
+weights/                  # Model weights (gitignored)
+```
 
-### Skill Guides
+---
 
-Each skill has a markdown guide (`analysis/skills/guides/<skill_name>.md`) that is automatically loaded into the agent's system prompt. These guides control:
-- When and how the agent invokes each skill
-- Required and optional parameters with defaults
-- Workflow patterns and decision rules
-- Error handling guidance
+## Agent Protocol
 
-Edit the markdown files to adjust agent behavior without changing code.
+The Python agent communicates with the Node.js backend via stderr markers:
 
-## Agent Communication Protocol
+```
+[REACT:THOUGHT]   reasoning step         → shown in thinking block
+[REACT:ACTION]    skill invocation        → shown as action badge
+[REACT:OBSERVATION] skill result          → fed back to agent
+[REACT:PLAN]      multi-step plan         → triggers approval UI
+[REACT:OVERLAY]   {"study_uid":...}       → VOI overlay on viewer
+[REACT:PROGRESS]  {"percent":50,...}      → progress bar update
+```
 
-Python agent communicates with Node.js via stderr markers:
-
-- `[REACT:THOUGHT]` — Agent reasoning step
-- `[REACT:ACTION]` — Skill invocation
-- `[REACT:OBSERVATION]` — Skill result
-- `[REACT:PLAN]` — Triggers plan approval UI in frontend
-- `[REACT:OVERLAY]{"study_uid":...}` — VOI overlay for viewer
-- `[REACT:PROGRESS]{"skill":...,"percent":...}` — Progress bar update
-
-## DICOM Data
-
-Place DICOM studies in `data/studies/` and start the server. The auto-indexer runs on startup, scans all subdirectories, and extracts clinical context from DICOM headers. Studies appear in the worklist sidebar.
+---
 
 ## License
 
-This project is licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (Creative Commons Attribution-NonCommercial 4.0).
+This project is licensed under **[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)** (Creative Commons Attribution-NonCommercial 4.0).
 
-### Third-Party Licenses
+<details>
+<summary><strong>Third-Party Licenses</strong></summary>
 
 | Component | License | Copyright |
-|---|---|---|
+|-----------|---------|-----------|
 | [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet) | Apache 2.0 | DKFZ, Heidelberg |
 | [AutoPET-3 LesionTracer](https://github.com/MIC-DKFZ/autopet-3-submission) | Apache 2.0 | DKFZ, Heidelberg |
 | [TotalSegmentator](https://github.com/wasserth/TotalSegmentator) | Apache 2.0 | Jakob Wasserthal |
@@ -159,3 +227,5 @@ This project is licensed under [CC BY-NC 4.0](https://creativecommons.org/licens
 | [scikit-image](https://github.com/scikit-image/scikit-image) | BSD-3-Clause | scikit-image team |
 
 See [LICENSE](LICENSE) for full details.
+
+</details>
