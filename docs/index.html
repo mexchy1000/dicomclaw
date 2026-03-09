@@ -3,25 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DICOMclaw — Agentic AI for Multimodal Fusion Imaging</title>
-  <meta name="description" content="An agentic AI framework that explores 3D medical image scans, integrates multimodal imaging data, and quantitatively characterizes lesions, organs, and treatment response.">
+  <title>DICOMclaw — AI Agent for Medical Image Reading</title>
+  <meta name="description" content="An agent-based medical imaging reading system. From raw DICOM to analytic results through interactive conversation.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0a0e17;
-      --bg-card: #111827;
-      --bg-card-hover: #1a2332;
-      --border: #1e293b;
-      --text: #e2e8f0;
-      --text-dim: #94a3b8;
-      --accent: #38bdf8;
-      --accent2: #a78bfa;
-      --accent3: #34d399;
-      --gradient: linear-gradient(135deg, #38bdf8, #a78bfa);
+      --bg: #000000;
+      --bg-surface: #0a0a0a;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --border: #222222;
+      --border-light: #333333;
+      --text: #ffffff;
+      --text-secondary: #b3b3b3;
+      --text-dim: #888888;
+      --accent: #48f08b;
+      --accent-dim: rgba(72, 240, 139, 0.12);
+      --blue: #6eb1ff;
+      --purple: #c4a1ff;
+      --radius: 24px;
+      --radius-sm: 16px;
+      --transition: 0.3s ease;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -29,38 +37,35 @@
       color: var(--text);
       line-height: 1.6;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Subtle grid background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 0;
+    ::selection {
+      background: var(--accent);
+      color: #000;
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 24px;
-      position: relative;
-      z-index: 1;
+      padding: 0 32px;
     }
 
     /* ── Nav ── */
     nav {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
-      background: rgba(10, 14, 23, 0.85);
+      padding: 24px 0;
+      transition: background var(--transition), backdrop-filter var(--transition);
+    }
+
+    nav.scrolled {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
     nav .container {
@@ -70,106 +75,163 @@
     }
 
     .nav-logo {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       letter-spacing: -0.02em;
+      color: var(--text);
     }
 
-    .nav-links { display: flex; gap: 28px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
     .nav-links a {
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 500;
-      transition: color 0.2s;
+      transition: color var(--transition);
+      letter-spacing: -0.01em;
     }
-    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover { color: var(--text); }
+
+    .nav-cta {
+      background: var(--text) !important;
+      color: var(--bg) !important;
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+      transition: opacity var(--transition) !important;
+    }
+    .nav-cta:hover { opacity: 0.85; color: var(--bg) !important; }
 
     /* ── Hero ── */
     .hero {
-      padding: 100px 0 60px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      padding: 140px 32px 80px;
+      position: relative;
     }
 
-    .hero-badge {
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 20px;
+    /* Radial glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(72,240,139,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 100px;
       border: 1px solid var(--border);
-      background: rgba(56, 189, 248, 0.08);
-      color: var(--accent);
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 28px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-bottom: 40px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
     }
 
     .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 4rem);
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 20px;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      max-width: 900px;
     }
 
-    .hero h1 .grad {
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .hero h1 .accent-text {
+      color: var(--accent);
     }
 
     .hero-sub {
-      font-size: 1.15rem;
-      color: var(--text-dim);
-      max-width: 680px;
-      margin: 0 auto 40px;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 16px;
       line-height: 1.7;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-tagline {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      margin-bottom: 48px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
     }
 
     .hero-buttons {
       display: flex;
-      gap: 14px;
+      gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-bottom: 80px;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 12px 28px;
-      border-radius: 10px;
-      font-size: 0.95rem;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 100px;
+      font-size: 0.92rem;
       font-weight: 600;
       text-decoration: none;
-      transition: all 0.2s;
+      transition: all var(--transition);
+      letter-spacing: -0.01em;
     }
 
     .btn-primary {
-      background: var(--gradient);
-      color: #0a0e17;
+      background: var(--text);
+      color: var(--bg);
     }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
 
-    .btn-outline {
+    .btn-ghost {
+      color: var(--text-secondary);
       border: 1px solid var(--border);
-      color: var(--text);
-      background: transparent;
     }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
 
     /* ── Hero Image ── */
     .hero-image {
-      margin: 60px auto 0;
-      max-width: 900px;
-      border-radius: 16px;
+      max-width: 1000px;
+      width: 100%;
+      border-radius: var(--radius);
       overflow: hidden;
       border: 1px solid var(--border);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      position: relative;
+    }
+
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+      pointer-events: none;
     }
 
     .hero-image img {
@@ -179,232 +241,318 @@
     }
 
     /* ── Section ── */
-    section { padding: 80px 0; }
-    section + section { border-top: 1px solid var(--border); }
+    section { padding: 120px 0; }
 
     .section-label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.15em;
       color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
       margin-bottom: 16px;
     }
 
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
     .section-desc {
-      color: var(--text-dim);
-      max-width: 600px;
-      margin-bottom: 48px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 64px;
       font-size: 1.05rem;
+      line-height: 1.7;
     }
 
-    /* ── Feature Grid ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 32px 28px;
-      transition: all 0.25s;
-    }
-
-    .feature-card:hover {
-      background: var(--bg-card-hover);
-      border-color: rgba(56, 189, 248, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      margin-bottom: 18px;
-    }
-
-    .feature-card h3 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .feature-card p {
-      color: var(--text-dim);
-      font-size: 0.92rem;
-      line-height: 1.65;
-    }
-
-    .icon-viewer { background: rgba(56, 189, 248, 0.12); color: #38bdf8; }
-    .icon-agent { background: rgba(167, 139, 250, 0.12); color: #a78bfa; }
-    .icon-quant { background: rgba(52, 211, 153, 0.12); color: #34d399; }
-    .icon-interact { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
-
-    /* ── Interaction Highlight ── */
-    .interaction-section {
+    /* ── Contrast Cards ── */
+    .contrast-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
+      gap: 16px;
+      margin-bottom: 80px;
     }
 
-    .interaction-text .section-desc { margin-bottom: 28px; }
+    .contrast-card {
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      border: 1px solid var(--border);
+    }
 
-    .interaction-list {
+    .contrast-card.problem {
+      background: var(--bg-surface);
+    }
+
+    .contrast-card.solution {
+      background: var(--accent-dim);
+      border-color: rgba(72, 240, 139, 0.2);
+    }
+
+    .contrast-card h3 {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 24px;
+    }
+
+    .contrast-card.problem h3 { color: var(--text-dim); }
+    .contrast-card.solution h3 { color: var(--accent); }
+
+    .contrast-card ul {
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .interaction-list li {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
+    .contrast-card li {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      padding-left: 24px;
+      position: relative;
     }
 
-    .interaction-list .dot {
+    .contrast-card.problem li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10px;
       width: 8px;
-      height: 8px;
+      height: 1px;
+      background: var(--text-dim);
+    }
+
+    .contrast-card.solution li::before {
+      content: '';
+      position: absolute;
+      left: 2px;
+      top: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: var(--accent);
-      margin-top: 8px;
-      flex-shrink: 0;
     }
 
-    .interaction-list strong { color: var(--text); }
-    .interaction-list span { color: var(--text-dim); font-size: 0.92rem; }
-
-    .interaction-visual {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
+    /* ── Pipeline ── */
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      border-radius: var(--radius);
       overflow: hidden;
     }
 
-    .interaction-visual img {
-      width: 100%;
-      height: auto;
+    .pipeline-step {
+      flex: 1;
+      background: var(--bg-card);
+      padding: 36px 24px;
+      text-align: center;
+      transition: background var(--transition);
+    }
+
+    .pipeline-step:hover { background: var(--bg-card-hover); }
+
+    .pipeline-step .step-num {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .pipeline-step h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .pipeline-step p {
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    /* ── Audience ── */
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .audience-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      transition: all var(--transition);
+    }
+
+    .audience-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-light);
+      transform: translateY(-2px);
+    }
+
+    .audience-card .a-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--accent-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: var(--accent);
+    }
+
+    .audience-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .audience-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    /* ── Feature Grid ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      transition: all var(--transition);
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-light);
+      transform: translateY(-2px);
+    }
+
+    .feature-card h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.65;
+    }
+
+    .feature-num {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
       display: block;
     }
 
-    /* ── Skills Table ── */
-    .skills-table {
-      width: 100%;
-      border-collapse: collapse;
+    /* ── How it works ── */
+    .how-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
     }
 
-    .skills-table th {
-      text-align: left;
-      padding: 14px 18px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      border-bottom: 1px solid var(--border);
+    .how-text .section-desc { margin-bottom: 32px; }
+
+    .how-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .skills-table td {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.92rem;
-    }
-
-    .skills-table tr:hover td { background: rgba(56, 189, 248, 0.03); }
-
-    .skill-name {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      color: var(--accent);
-      font-weight: 500;
-      font-size: 0.88rem;
-    }
-
-    /* ── Architecture ── */
-    .arch-diagram {
+    .how-example {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 40px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.85rem;
-      line-height: 1.7;
-      overflow-x: auto;
-      color: var(--text-dim);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      transition: all var(--transition);
     }
 
-    .arch-diagram .layer {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 14px 20px;
-      border-radius: 10px;
-      margin-bottom: 8px;
+    .how-example:hover {
+      border-color: var(--border-light);
+      background: var(--bg-card-hover);
     }
 
-    .arch-diagram .layer-tag {
+    .how-example .prompt {
+      font-size: 0.95rem;
       font-weight: 600;
-      min-width: 80px;
-      flex-shrink: 0;
+      margin-bottom: 8px;
+      color: var(--text);
+      letter-spacing: -0.01em;
     }
 
-    .layer-frontend { background: rgba(56,189,248,0.08); border-left: 3px solid #38bdf8; }
-    .layer-frontend .layer-tag { color: #38bdf8; }
+    .how-example .prompt::before {
+      content: '\203A  ';
+      color: var(--accent);
+      font-weight: 700;
+    }
 
-    .layer-backend { background: rgba(167,139,250,0.08); border-left: 3px solid #a78bfa; }
-    .layer-backend .layer-tag { color: #a78bfa; }
-
-    .layer-agent { background: rgba(52,211,153,0.08); border-left: 3px solid #34d399; }
-    .layer-agent .layer-tag { color: #34d399; }
-
-    .layer-models { background: rgba(251,191,36,0.08); border-left: 3px solid #fbbf24; }
-    .layer-models .layer-tag { color: #fbbf24; }
-
-    .arch-connector {
-      text-align: center;
+    .how-example .result {
       color: var(--text-dim);
-      opacity: 0.4;
-      font-size: 0.8rem;
-      padding: 4px 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .how-visual {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .how-visual img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
     /* ── Reference ── */
     .reference-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 36px;
+      border-radius: var(--radius);
+      padding: 48px;
+      max-width: 700px;
     }
 
     .reference-card .paper-title {
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       line-height: 1.5;
+      letter-spacing: -0.01em;
     }
 
     .reference-card .paper-authors {
-      color: var(--text-dim);
+      color: var(--text-secondary);
       font-size: 0.92rem;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .reference-card .paper-venue {
-      color: var(--accent);
       font-size: 0.88rem;
       font-weight: 500;
     }
@@ -412,261 +560,290 @@
     .reference-card .paper-venue a {
       color: var(--accent);
       text-decoration: none;
+      transition: opacity var(--transition);
     }
-    .reference-card .paper-venue a:hover { text-decoration: underline; }
+    .reference-card .paper-venue a:hover { opacity: 0.7; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0;
+    }
 
     /* ── Footer ── */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 0;
-      text-align: center;
+      padding: 60px 0;
     }
 
-    .footer-text {
-      color: var(--text-dim);
-      font-size: 0.85rem;
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .footer-text a {
+    .footer-left {
       color: var(--text-dim);
-      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.8;
     }
-    .footer-text a:hover { color: var(--accent); }
 
     .footer-links {
       display: flex;
-      gap: 24px;
-      justify-content: center;
-      margin-bottom: 16px;
+      gap: 28px;
     }
 
     .footer-links a {
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color var(--transition);
     }
-    .footer-links a:hover { color: var(--accent); }
+    .footer-links a:hover { color: var(--text); }
 
     /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: 1fr 1fr; }
+    }
+
     @media (max-width: 768px) {
-      .interaction-section { grid-template-columns: 1fr; }
+      .how-section { grid-template-columns: 1fr; gap: 40px; }
       .features-grid { grid-template-columns: 1fr; }
-      .hero { padding: 60px 0 40px; }
-      section { padding: 50px 0; }
+      .contrast-grid { grid-template-columns: 1fr; }
+      .audience-grid { grid-template-columns: 1fr; }
+      .pipeline { flex-direction: column; }
+      .hero { padding: 120px 24px 60px; min-height: auto; }
+      section { padding: 80px 0; }
       .nav-links { gap: 16px; }
+      .footer-inner { flex-direction: column; gap: 24px; text-align: center; }
+      .container { padding: 0 20px; }
     }
   </style>
 </head>
 <body>
 
   <!-- Nav -->
-  <nav>
+  <nav id="nav">
     <div class="container">
       <div class="nav-logo">DICOMclaw</div>
       <div class="nav-links">
+        <a href="#why">Why</a>
         <a href="#features">Features</a>
-        <a href="#skills">Skills</a>
-        <a href="#architecture">Architecture</a>
+        <a href="#how-it-works">How It Works</a>
         <a href="#reference">Reference</a>
-        <a href="https://github.com/mexchy1000/dicomclaw" target="_blank">GitHub</a>
+        <a href="https://github.com/mexchy1000/dicomclaw" target="_blank" class="nav-cta">GitHub</a>
       </div>
     </div>
   </nav>
 
   <!-- Hero -->
   <section class="hero">
+    <div class="hero-pill">
+      <span class="dot"></span>
+      AI-Powered Medical Image Reading
+    </div>
+    <h1>
+      From raw DICOM to<br>
+      <span class="accent-text">analytic results.</span>
+    </h1>
+    <p class="hero-sub">
+      An AI agent that reads medical images with you.
+      Load your scans, ask questions in plain language, and receive
+      quantitative analysis directly within an interactive viewer.
+    </p>
+    <p class="hero-tagline">End-to-end &middot; Interactive &middot; Agent-driven</p>
+    <div class="hero-buttons">
+      <a href="https://github.com/mexchy1000/dicomclaw" class="btn btn-primary" target="_blank">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        View on GitHub
+      </a>
+      <a href="#how-it-works" class="btn btn-ghost">See How It Works</a>
+    </div>
+
+    <div class="hero-image">
+      <img src="https://github.com/user-attachments/assets/874f5c23-0eae-4568-8a80-b593fda5d0fb" alt="DICOMclaw interface">
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Why -->
+  <section id="why">
     <div class="container">
-      <div class="hero-badge">Research Framework</div>
-      <h1>
-        Agentic AI for<br>
-        <span class="grad">Multimodal Fusion Imaging</span>
-      </h1>
-      <p class="hero-sub">
-        Explores 3D medical image scans, integrates multimodal imaging data,
-        and quantitatively characterizes lesions, organs, tracer distribution,
-        and treatment response — all through <strong>interactive conversation</strong>.
+      <div class="section-label">The problem</div>
+      <h2 class="section-title">Image analysis is fragmented.</h2>
+      <p class="section-desc">
+        Researchers and physicians juggle disconnected tools for viewing, segmenting, measuring, and reporting.
+        DICOMclaw replaces that with a single AI agent.
       </p>
-      <div class="hero-buttons">
-        <a href="https://github.com/mexchy1000/dicomclaw" class="btn btn-primary" target="_blank">
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-          View on GitHub
-        </a>
-        <a href="#features" class="btn btn-outline">Explore Features</a>
+
+      <div class="contrast-grid">
+        <div class="contrast-card problem">
+          <h3>Traditional workflow</h3>
+          <ul>
+            <li>Switch between viewer, segmentation tool, spreadsheets</li>
+            <li>Manual region drawing, copy-paste measurements</li>
+            <li>Separate software for each analysis step</li>
+            <li>Results disconnected from the images</li>
+          </ul>
+        </div>
+        <div class="contrast-card solution">
+          <h3>With DICOMclaw</h3>
+          <ul>
+            <li>One workspace: viewer, agent, and results together</li>
+            <li>Describe your analysis in natural language</li>
+            <li>Agent plans, executes, overlays results on the viewer</li>
+            <li>Every result is linked to the image it came from</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="hero-image">
-        <img src="https://github.com/user-attachments/assets/874f5c23-0eae-4568-8a80-b593fda5d0fb" alt="DICOMclaw — Agentic PET/CT analysis platform">
+      <div class="pipeline">
+        <div class="pipeline-step">
+          <div class="step-num">Step 01</div>
+          <h4>DICOM Data</h4>
+          <p>Load raw scans</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">Step 02</div>
+          <h4>AI Agent</h4>
+          <p>Plans &amp; executes</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">Step 03</div>
+          <h4>Interactive Viewer</h4>
+          <p>Visualize &amp; interact</p>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-num">Step 04</div>
+          <h4>Analytic Results</h4>
+          <p>Reports &amp; measurements</p>
+        </div>
       </div>
     </div>
   </section>
+
+  <div class="divider"></div>
+
+  <!-- Built for -->
+  <section>
+    <div class="container">
+      <div class="section-label">Built for</div>
+      <h2 class="section-title">Researchers and clinicians.</h2>
+      <p class="section-desc">
+        A new way to read medical images — designed for those who need faster, more integrated analysis in their daily work.
+      </p>
+
+      <div class="audience-grid">
+        <div class="audience-card">
+          <div class="a-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714a2.25 2.25 0 00.659 1.591L19 14.5M14.25 3.104c.251.023.501.05.75.082M19 14.5l-2.47 2.47a2.25 2.25 0 00-.659 1.59v.91a1.5 1.5 0 01-1.5 1.5h-4.742a1.5 1.5 0 01-1.5-1.5v-.91a2.25 2.25 0 00-.659-1.59L5 14.5"/></svg>
+          </div>
+          <h3>Imaging Researchers</h3>
+          <p>Automate quantitative analysis pipelines for PET, CT, and multimodal fusion imaging studies.</p>
+        </div>
+        <div class="audience-card">
+          <div class="a-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/></svg>
+          </div>
+          <h3>Nuclear Medicine</h3>
+          <p>SUV quantification, lesion detection, organ segmentation, and treatment response tracking.</p>
+        </div>
+        <div class="audience-card">
+          <div class="a-icon">
+            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+          </div>
+          <h3>Radiology &amp; Oncology</h3>
+          <p>Conversational image reading — ask questions about your scans and get structured, quantitative answers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
 
   <!-- Features -->
   <section id="features">
     <div class="container">
-      <div class="section-label">Capabilities</div>
-      <h2 class="section-title">Everything in one workspace</h2>
+      <div class="section-label">Key features</div>
+      <h2 class="section-title">What the agent can do.</h2>
       <p class="section-desc">
-        Converse with an AI agent that sees what you see, operates directly on imaging data,
-        and presents results back into the viewer in real time.
+        From viewing raw DICOM data to generating structured reports — the agent handles the entire pipeline while you stay in control.
       </p>
 
       <div class="features-grid">
         <div class="feature-card">
-          <div class="feature-icon icon-viewer">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <h3>DICOM Viewer</h3>
-          <p>2x2 grid with CT, PET, Fusion, and MIP viewports. W/L presets, PET colormaps, slice sync, and orientation switching. Powered by Cornerstone3D.</p>
+          <span class="feature-num">01</span>
+          <h3>Integrated Viewer</h3>
+          <p>Multi-panel display with CT, PET, fused, and MIP views. Navigate, adjust, and interact — all connected to the agent's analysis.</p>
         </div>
-
         <div class="feature-card">
-          <div class="feature-icon icon-agent">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
-          </div>
-          <h3>ReAct Agent</h3>
-          <p>Plan-and-execute reasoning loop with transparent thinking, plan approval before multi-step analyses, and real-time progress updates.</p>
+          <span class="feature-num">02</span>
+          <h3>Autonomous Agent</h3>
+          <p>An AI that reasons about your request, proposes an analysis plan, and executes it step by step — with your approval at every stage.</p>
         </div>
-
         <div class="feature-card">
-          <div class="feature-icon icon-quant">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          </div>
-          <h3>Quantification</h3>
-          <p>AutoPET-3 lesion detection, TotalSegmentator organ segmentation (117 structures), SUV statistics, radiomics (GLCM, shape, first-order).</p>
+          <span class="feature-num">03</span>
+          <h3>Automated Quantification</h3>
+          <p>Lesion detection, organ segmentation, uptake measurement, and radiomic feature extraction — from a single request.</p>
         </div>
-
         <div class="feature-card">
-          <div class="feature-icon icon-interact">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
-          </div>
-          <h3>Interactive</h3>
-          <p>Draw VOIs on PET/Fusion, click MIP for navigation, @mention VOIs in chat, threshold refinement — direct manipulation meets conversation.</p>
+          <span class="feature-num">04</span>
+          <h3>Interactive Drawing</h3>
+          <p>Draw regions of interest directly on the viewer, refine thresholds, and reference them in conversation for targeted analysis.</p>
         </div>
-
         <div class="feature-card">
-          <div class="feature-icon icon-agent">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </div>
-          <h3>Dual Chat Modes</h3>
-          <p><strong>Agent mode</strong> for full skill execution with plan approval. <strong>Chat mode</strong> for direct VLM conversation using live viewport snapshots.</p>
+          <span class="feature-num">05</span>
+          <h3>Conversational Reading</h3>
+          <p>Ask the agent to run analyses, or chat with a vision model about what you see. The agent sees the same images you do.</p>
         </div>
-
         <div class="feature-card">
-          <div class="feature-icon icon-quant">
-            <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          </div>
-          <h3>Markdown Skill Guides</h3>
-          <p>Each skill is controlled by an editable markdown file injected into the agent prompt at runtime. Change behavior without touching code.</p>
+          <span class="feature-num">06</span>
+          <h3>Structured Reports</h3>
+          <p>All findings — segmentations, measurements, interpretations — compiled into a structured report linked to original images.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Interaction -->
-  <section>
+  <div class="divider"></div>
+
+  <!-- How it works -->
+  <section id="how-it-works">
     <div class="container">
-      <div class="interaction-section">
-        <div class="interaction-text">
+      <div class="how-section">
+        <div class="how-text">
           <div class="section-label">How it works</div>
-          <h2 class="section-title">Converse, not configure</h2>
+          <h2 class="section-title">Talk to your images.</h2>
           <p class="section-desc">
-            Describe what you need in natural language. The agent plans the analysis,
-            asks for your approval, executes the skills, and overlays results directly
-            on your viewer.
+            Describe what you need in plain language. The agent understands clinical context,
+            plans the analysis, and delivers results on the viewer.
           </p>
-          <ul class="interaction-list">
-            <li>
-              <div class="dot"></div>
-              <div>
-                <strong>"Segment the liver and calculate SUV"</strong><br>
-                <span>Agent proposes a plan → you approve → TotalSegmentator runs → SUV stats computed → contour overlay appears on viewer</span>
-              </div>
-            </li>
-            <li>
-              <div class="dot"></div>
-              <div>
-                <strong>"Detect all lesions and generate a report"</strong><br>
-                <span>AutoPET-3 inference → lesion quantification → structured markdown report with MIP overlay</span>
-              </div>
-            </li>
-            <li>
-              <div class="dot"></div>
-              <div>
-                <strong>"Extract texture features for @VOI1"</strong><br>
-                <span>GLCM (2D/3D), shape, first-order radiomics → CSV + radar chart visualization</span>
-              </div>
-            </li>
-          </ul>
+
+          <div class="how-examples">
+            <div class="how-example">
+              <div class="prompt">"Segment the liver and measure uptake"</div>
+              <div class="result">The agent segments the organ, computes statistics, and overlays the contour on the viewer.</div>
+            </div>
+            <div class="how-example">
+              <div class="prompt">"Find all lesions and generate a report"</div>
+              <div class="result">Whole-body detection, quantification of each finding, and a structured summary.</div>
+            </div>
+            <div class="how-example">
+              <div class="prompt">"What do you see in this scan?"</div>
+              <div class="result">The vision model interprets the current view and discusses findings with you.</div>
+            </div>
+          </div>
         </div>
-        <div class="interaction-visual">
-          <img src="https://github.com/user-attachments/assets/dd351a4a-cd78-40ea-9862-2b2a1281a539" alt="DICOMclaw interaction flow">
+        <div class="how-visual">
+          <img src="https://github.com/user-attachments/assets/dd351a4a-cd78-40ea-9862-2b2a1281a539" alt="DICOMclaw conversational reading">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Skills -->
-  <section id="skills">
-    <div class="container">
-      <div class="section-label">Skill System</div>
-      <h2 class="section-title">10 auto-discovered skills</h2>
-      <p class="section-desc">
-        Skills are Python classes in <code>analysis/skills/</code>, each paired with a markdown guide
-        that controls agent behavior at runtime.
-      </p>
-      <table class="skills-table">
-        <thead>
-          <tr>
-            <th>Skill</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="skill-name">scan_dicom</span></td><td>Discover series, extract metadata, auto-select best CT/PET pair</td></tr>
-          <tr><td><span class="skill-name">generate_mip</span></td><td>Maximum Intensity Projection from PET (4 rotational angles)</td></tr>
-          <tr><td><span class="skill-name">calc_suv</span></td><td>Organ SUV statistics via TotalSegmentator segmentation</td></tr>
-          <tr><td><span class="skill-name">segment_organ</span></td><td>Organ segmentation with real-time viewer overlay (117 structures)</td></tr>
-          <tr><td><span class="skill-name">quantify_lesion</span></td><td>AutoPET-3 whole-body lesion detection + SUV quantification</td></tr>
-          <tr><td><span class="skill-name">extract_texture</span></td><td>Radiomics — GLCM (2D/3D), shape, first-order features</td></tr>
-          <tr><td><span class="skill-name">analyze_voi</span></td><td>Detailed VOI statistics, histogram, axial intensity profile</td></tr>
-          <tr><td><span class="skill-name">compare_studies</span></td><td>Cross-timepoint lesion tracking and response assessment</td></tr>
-          <tr><td><span class="skill-name">vision_interpret</span></td><td>VLM-based image interpretation (MIP, lesion, VOI snapshots)</td></tr>
-          <tr><td><span class="skill-name">generate_report</span></td><td>Structured markdown report from accumulated analysis results</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Architecture -->
-  <section id="architecture">
-    <div class="container">
-      <div class="section-label">System Design</div>
-      <h2 class="section-title">Architecture</h2>
-      <p class="section-desc">Three-layer design connecting an interactive viewer with an autonomous reasoning agent.</p>
-
-      <div class="arch-diagram">
-        <div class="layer layer-frontend">
-          <span class="layer-tag">Frontend</span>
-          <span>React 18 + Vite &nbsp;|&nbsp; Cornerstone3D v4.18 &nbsp;|&nbsp; Chat UI &nbsp;|&nbsp; VOI Drawing &nbsp;|&nbsp; Plan Approval</span>
-        </div>
-        <div class="arch-connector">&#9474; Socket.io + REST</div>
-        <div class="layer layer-backend">
-          <span class="layer-tag">Backend</span>
-          <span>Node.js + Express &nbsp;|&nbsp; Socket.io &nbsp;|&nbsp; SQLite &nbsp;|&nbsp; WADO-URI &nbsp;|&nbsp; VLM Client</span>
-        </div>
-        <div class="arch-connector">&#9474; subprocess (stdin / stdout / stderr)</div>
-        <div class="layer layer-agent">
-          <span class="layer-tag">Agent</span>
-          <span>Python ReAct Loop &nbsp;|&nbsp; 10 Skills &nbsp;|&nbsp; Markdown Guides &nbsp;|&nbsp; Clinical Context</span>
-        </div>
-        <div class="arch-connector">&#9474;</div>
-        <div class="layer layer-models">
-          <span class="layer-tag">Models</span>
-          <span>AutoPET-3 (nnU-Net) &nbsp;|&nbsp; TotalSegmentator &nbsp;|&nbsp; VLM &nbsp;|&nbsp; OpenRouter LLM</span>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="divider"></div>
 
   <!-- Reference -->
   <section id="reference">
@@ -681,28 +858,39 @@
         </div>
         <div class="paper-authors">Hongyoon Choi, Sungwoo Bae, Kwon Joong Na</div>
         <div class="paper-venue">
-          <em>medRxiv</em> 2026 &nbsp;|&nbsp;
+          <em>medRxiv</em> 2026 &nbsp;&middot;&nbsp;
           <a href="https://doi.org/10.64898/2026.02.21.26346798" target="_blank">DOI: 10.64898/2026.02.21.26346798</a>
         </div>
       </div>
     </div>
   </section>
 
+  <div class="divider"></div>
+
   <!-- Footer -->
   <footer>
     <div class="container">
-      <div class="footer-links">
-        <a href="https://github.com/mexchy1000/dicomclaw" target="_blank">GitHub</a>
-        <a href="https://doi.org/10.64898/2026.02.21.26346798" target="_blank">Paper</a>
-        <a href="https://portrai.io" target="_blank">Portrai</a>
-      </div>
-      <div class="footer-text">
-        CC BY-NC 4.0 &nbsp;|&nbsp; Not intended for clinical use; for research purposes only.
-        <br>
-        Contact: chy at portrai.io
+      <div class="footer-inner">
+        <div class="footer-left">
+          CC BY-NC 4.0 &middot; Not intended for clinical use; for research purposes only.<br>
+          Contact: chy at portrai.io
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com/mexchy1000/dicomclaw" target="_blank">GitHub</a>
+          <a href="https://doi.org/10.64898/2026.02.21.26346798" target="_blank">Paper</a>
+          <a href="https://portrai.io" target="_blank">Portrai</a>
+        </div>
       </div>
     </div>
   </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+  </script>
 
 </body>
 </html>
