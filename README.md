@@ -11,7 +11,8 @@
 </p>
 
 <p align="center">
-  <img src="assets/hero.svg" alt="DICOMclaw Architecture Overview" width="100%"/>
+<img width="760" height="382" alt="image" src="https://github.com/user-attachments/assets/874f5c23-0eae-4568-8a80-b593fda5d0fb" />
+
 </p>
 
 ---
@@ -21,6 +22,8 @@
 Traditional PET/CT workflows involve switching between multiple tools — viewers, segmentation software, spreadsheets, and reporting systems. **DICOMclaw unifies everything into a single interactive workspace** where you converse with an AI agent that sees what you see, operates directly on your imaging data, and presents results back into the viewer in real time.
 
 > *"Segment the liver and calculate SUV"* → The agent plans, segments, quantifies, overlays the result on your viewer, and summarizes — all in one conversation turn.
+
+<img width="907" height="284" alt="image" src="https://github.com/user-attachments/assets/dd351a4a-cd78-40ea-9862-2b2a1281a539" />
 
 ### Key Principles
 
@@ -70,8 +73,8 @@ Traditional PET/CT workflows involve switching between multiple tools — viewer
 
 ### Interaction Modes
 - **Agent Mode** — Full ReAct loop with skill execution and plan approval
-- **Chat Mode** — Direct VLM conversation using viewport snapshots
-- **@ VOI Mention** — Autocomplete VOI references; context auto-injected
+- **Chat Mode** — Direct VLM conversation using viewport (e.g. discuss a 'marked lesion')
+- **@ Mention** — Autocomplete VOI references; context auto-injected
 - **VOI Drawing** — Click/drag on PET/Fusion → sphere VOI → threshold menu
 - **MIP Click** — Ray-traced navigation to max-intensity voxel
 
