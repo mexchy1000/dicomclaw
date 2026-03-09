@@ -219,7 +219,7 @@ The Python agent communicates with the Node.js backend via stderr markers:
 
 ## Reference
 
-If you use DICOMclaw in your research, please cite:
+Please cite:
 
 > **End-to-End PET/CT Interpretation and Quantification with an LLM-Orchestrated AI Agent: A Real-World Pilot Study**
 > Hongyoon Choi, Sungwoo Bae, Kwon Joong Na
@@ -240,7 +240,7 @@ If you use DICOMclaw in your research, please cite:
 
 ## License
 
-This project is licensed under **[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)** (Creative Commons Attribution-NonCommercial 4.0).
+**[CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)** (Creative Commons Attribution-NonCommercial 4.0).
 
 <details>
 <summary><strong>Third-Party Licenses</strong></summary>
