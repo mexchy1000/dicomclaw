@@ -15,6 +15,11 @@
 
 </p>
 
+<p align="center">
+ <strong>Not intended for clinical use; for research purposes only.</strong><br>
+(A part of Domain-Specific AI Scientist Project of Portrai, Inc. https://portrai.io/) 
+</p>
+
 ---
 
 ## Why DICOMclaw?
