@@ -115,17 +115,17 @@
       position: relative;
     }
 
-    /* Radial glow */
-    .hero::before {
-      content: '';
+    .hero-bg-canvas {
       position: absolute;
-      top: -20%;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 600px;
-      background: radial-gradient(ellipse, rgba(72,240,139,0.06) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      max-width: 900px;
+      max-height: 900px;
       pointer-events: none;
+      opacity: 0.18;
     }
 
     .hero-pill {
@@ -151,7 +151,7 @@
     }
 
     .hero h1 {
-      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
       font-weight: 900;
       letter-spacing: -0.04em;
       line-height: 1.05;
@@ -639,13 +639,56 @@
 
   <!-- Hero -->
   <section class="hero">
+    <!-- Animated orbital background -->
+    <svg class="hero-bg-canvas" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Orbital rings -->
+      <g opacity="0.6">
+        <ellipse cx="400" cy="400" rx="320" ry="120" stroke="#38bdf8" stroke-width="0.5" transform="rotate(-20 400 400)">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 400" to="360 400 400" dur="60s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="400" cy="400" rx="280" ry="160" stroke="#38bdf8" stroke-width="0.4" transform="rotate(40 400 400)">
+          <animateTransform attributeName="transform" type="rotate" from="360 400 400" to="0 400 400" dur="45s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="400" cy="400" rx="350" ry="90" stroke="#6eb1ff" stroke-width="0.3" transform="rotate(70 400 400)">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 400" to="360 400 400" dur="80s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="400" cy="400" rx="240" ry="200" stroke="#c4a1ff" stroke-width="0.3">
+          <animateTransform attributeName="transform" type="rotate" from="360 400 400" to="0 400 400" dur="70s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="400" cy="400" rx="380" ry="60" stroke="#38bdf8" stroke-width="0.25" transform="rotate(-50 400 400)">
+          <animateTransform attributeName="transform" type="rotate" from="0 400 400" to="360 400 400" dur="90s" repeatCount="indefinite"/>
+        </ellipse>
+      </g>
+      <!-- Floating dots on orbits -->
+      <g>
+        <circle r="3" fill="#38bdf8" opacity="0.5">
+          <animateMotion dur="60s" repeatCount="indefinite" path="M80,400 A320,120 -20 1,1 80,400.01"/>
+        </circle>
+        <circle r="2.5" fill="#6eb1ff" opacity="0.4">
+          <animateMotion dur="45s" repeatCount="indefinite" path="M120,400 A280,160 40 1,0 120,400.01"/>
+        </circle>
+        <circle r="2" fill="#c4a1ff" opacity="0.4">
+          <animateMotion dur="70s" repeatCount="indefinite" path="M160,400 A240,200 0 1,0 160,400.01"/>
+        </circle>
+        <circle r="3.5" fill="#38bdf8" opacity="0.3">
+          <animateMotion dur="80s" repeatCount="indefinite" path="M50,400 A350,90 70 1,1 50,400.01"/>
+        </circle>
+      </g>
+      <!-- Center glow -->
+      <radialGradient id="center-glow">
+        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.15"/>
+        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+      </radialGradient>
+      <circle cx="400" cy="400" r="150" fill="url(#center-glow)"/>
+    </svg>
+
     <div class="hero-pill">
       <span class="dot"></span>
       AI-Powered Medical Image Reading
     </div>
     <h1>
       Next-generation<br>
-      <span class="accent-text">agentic medical<br>imaging analysis.</span>
+      <span class="accent-text">agentic medical imaging analysis</span>
     </h1>
     <p class="hero-sub">
       From raw DICOM to draft reporting — an AI agent that reads medical images with you,
