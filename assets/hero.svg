@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="960" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <linearGradient id="warm" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="320" rx="12" fill="url(#bg)"/>
+
+  <!-- Grid lines (subtle) -->
+  <g stroke="#334155" stroke-width="0.5" opacity="0.4">
+    <line x1="0" y1="80" x2="960" y2="80"/>
+    <line x1="0" y1="160" x2="960" y2="160"/>
+    <line x1="0" y1="240" x2="960" y2="240"/>
+    <line x1="240" y1="0" x2="240" y2="320"/>
+    <line x1="480" y1="0" x2="480" y2="320"/>
+    <line x1="720" y1="0" x2="720" y2="320"/>
+  </g>
+
+  <!-- Viewer panel (left) -->
+  <g transform="translate(40, 50)">
+    <!-- 2x2 grid -->
+    <rect width="100" height="75" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <rect x="105" width="100" height="75" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <rect y="80" width="100" height="75" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <rect x="105" y="80" width="100" height="75" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+
+    <!-- CT label -->
+    <text x="50" y="18" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9" font-weight="600">CT</text>
+    <!-- Body silhouette in CT -->
+    <ellipse cx="50" cy="45" rx="25" ry="22" fill="#334155" opacity="0.8"/>
+
+    <!-- PET label -->
+    <text x="155" y="18" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9" font-weight="600">PET</text>
+    <!-- Hot spots -->
+    <ellipse cx="155" cy="45" rx="25" ry="22" fill="#1e293b"/>
+    <circle cx="148" cy="38" r="5" fill="#f97316" opacity="0.9"/>
+    <circle cx="160" cy="50" r="3.5" fill="#ef4444" opacity="0.8"/>
+    <circle cx="155" cy="32" r="2.5" fill="#fbbf24" opacity="0.7"/>
+
+    <!-- Fusion label -->
+    <text x="50" y="98" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9" font-weight="600">Fusion</text>
+    <ellipse cx="50" cy="125" rx="25" ry="22" fill="#334155" opacity="0.5"/>
+    <circle cx="43" cy="118" r="5" fill="#f97316" opacity="0.7"/>
+    <circle cx="55" cy="130" r="3.5" fill="#ef4444" opacity="0.6"/>
+
+    <!-- MIP label -->
+    <text x="155" y="98" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="9" font-weight="600">MIP</text>
+    <!-- Body MIP outline -->
+    <path d="M140,105 Q145,100 155,100 Q165,100 170,105 L172,140 Q165,150 155,150 Q145,150 138,140 Z" fill="#1e293b" stroke="#475569" stroke-width="0.5"/>
+    <circle cx="152" cy="112" r="3" fill="#f97316" opacity="0.9"/>
+    <circle cx="157" cy="128" r="2" fill="#ef4444" opacity="0.8"/>
+
+    <!-- VOI contour overlay -->
+    <circle cx="43" cy="118" r="8" fill="none" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="2,1.5" opacity="0.9"/>
+    <circle cx="148" cy="38" r="8" fill="none" stroke="#38bdf8" stroke-width="1.2" stroke-dasharray="2,1.5" opacity="0.9"/>
+
+    <text x="102" y="180" text-anchor="middle" fill="#64748b" font-family="system-ui" font-size="10">Interactive Viewer</text>
+  </g>
+
+  <!-- Arrow: Viewer → Agent -->
+  <g transform="translate(270, 140)">
+    <line x1="0" y1="0" x2="50" y2="0" stroke="url(#accent)" stroke-width="2" stroke-dasharray="4,3"/>
+    <polygon points="50,-5 60,0 50,5" fill="#38bdf8"/>
+    <text x="30" y="-10" text-anchor="middle" fill="#64748b" font-family="system-ui" font-size="8">Socket.io</text>
+  </g>
+
+  <!-- Agent brain (center) -->
+  <g transform="translate(345, 60)">
+    <rect width="250" height="200" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" opacity="0.9"/>
+
+    <!-- Title -->
+    <text x="125" y="28" text-anchor="middle" fill="#e2e8f0" font-family="system-ui" font-size="13" font-weight="700">ReAct Agent</text>
+    <line x1="20" y1="38" x2="230" y2="38" stroke="#334155" stroke-width="1"/>
+
+    <!-- Thought bubble -->
+    <rect x="15" y="48" width="220" height="24" rx="4" fill="#0f172a" stroke="#475569" stroke-width="0.5"/>
+    <text x="25" y="64" fill="#38bdf8" font-family="monospace" font-size="9">Thought:</text>
+    <text x="82" y="64" fill="#94a3b8" font-family="monospace" font-size="9">analyze liver SUV...</text>
+
+    <!-- Action -->
+    <rect x="15" y="78" width="220" height="24" rx="4" fill="#0f172a" stroke="#475569" stroke-width="0.5"/>
+    <text x="25" y="94" fill="#f97316" font-family="monospace" font-size="9">Action:</text>
+    <text x="74" y="94" fill="#94a3b8" font-family="monospace" font-size="9">use_skill(calc_suv, organ=liver)</text>
+
+    <!-- Plan -->
+    <rect x="15" y="108" width="220" height="24" rx="4" fill="#0f172a" stroke="#818cf8" stroke-width="0.8"/>
+    <text x="25" y="124" fill="#818cf8" font-family="monospace" font-size="9">Plan:</text>
+    <text x="62" y="124" fill="#94a3b8" font-family="monospace" font-size="9">1. quantify_lesion 2. calc_suv</text>
+
+    <!-- Skills grid -->
+    <g transform="translate(15, 142)">
+      <rect width="68" height="20" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="0.8"/>
+      <text x="34" y="14" text-anchor="middle" fill="#38bdf8" font-family="system-ui" font-size="8">AutoPET-3</text>
+
+      <rect x="75" width="68" height="20" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="0.8"/>
+      <text x="109" y="14" text-anchor="middle" fill="#38bdf8" font-family="system-ui" font-size="8">TotalSeg</text>
+
+      <rect x="150" width="68" height="20" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="0.8"/>
+      <text x="184" y="14" text-anchor="middle" fill="#38bdf8" font-family="system-ui" font-size="8">Radiomics</text>
+    </g>
+
+    <g transform="translate(15, 168)">
+      <rect width="68" height="20" rx="10" fill="#0f172a" stroke="#475569" stroke-width="0.8"/>
+      <text x="34" y="14" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="8">VLM</text>
+
+      <rect x="75" width="68" height="20" rx="10" fill="#0f172a" stroke="#475569" stroke-width="0.8"/>
+      <text x="109" y="14" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="8">MIP Gen</text>
+
+      <rect x="150" width="68" height="20" rx="10" fill="#0f172a" stroke="#475569" stroke-width="0.8"/>
+      <text x="184" y="14" text-anchor="middle" fill="#94a3b8" font-family="system-ui" font-size="8">Report</text>
+    </g>
+  </g>
+
+  <!-- Arrow: Agent → Output -->
+  <g transform="translate(610, 140)">
+    <line x1="0" y1="0" x2="50" y2="0" stroke="url(#accent)" stroke-width="2" stroke-dasharray="4,3"/>
+    <polygon points="50,-5 60,0 50,5" fill="#38bdf8"/>
+    <text x="30" y="-10" text-anchor="middle" fill="#64748b" font-family="system-ui" font-size="8">Overlay</text>
+  </g>
+
+  <!-- Results (right) -->
+  <g transform="translate(685, 50)">
+    <!-- Stats card -->
+    <rect width="230" height="85" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="15" y="22" fill="#e2e8f0" font-family="system-ui" font-size="11" font-weight="600">Quantification Results</text>
+    <line x1="10" y1="30" x2="220" y2="30" stroke="#334155" stroke-width="0.5"/>
+
+    <text x="15" y="47" fill="#94a3b8" font-family="monospace" font-size="9">Lesion 1  SUVmax</text>
+    <text x="180" y="47" fill="#f97316" font-family="monospace" font-size="9" font-weight="700">5.52</text>
+
+    <text x="15" y="62" fill="#94a3b8" font-family="monospace" font-size="9">Lesion 2  SUVmax</text>
+    <text x="180" y="62" fill="#fbbf24" font-family="monospace" font-size="9" font-weight="700">4.57</text>
+
+    <text x="15" y="77" fill="#94a3b8" font-family="monospace" font-size="9">Liver ref SUVmean</text>
+    <text x="180" y="77" fill="#38bdf8" font-family="monospace" font-size="9" font-weight="700">1.81</text>
+
+    <!-- Chat bubble -->
+    <rect y="95" width="230" height="60" rx="6" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+    <text x="15" y="113" fill="#e2e8f0" font-family="system-ui" font-size="11" font-weight="600">Agent Response</text>
+    <line x1="10" y1="120" x2="220" y2="120" stroke="#334155" stroke-width="0.5"/>
+    <text x="15" y="137" fill="#94a3b8" font-family="system-ui" font-size="9">Found 2 lesions. Lesion 1 shows</text>
+    <text x="15" y="149" fill="#94a3b8" font-family="system-ui" font-size="9">SUVmax=5.52 (3.0× liver reference).</text>
+
+    <!-- Markdown guide icon -->
+    <rect y="165" width="230" height="50" rx="6" fill="#1e293b" stroke="#818cf8" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="15" y="183" fill="#818cf8" font-family="system-ui" font-size="10" font-weight="600">Skill Guides (*.md)</text>
+    <text x="15" y="200" fill="#64748b" font-family="system-ui" font-size="9">Edit markdown → agent adapts instantly</text>
+  </g>
+
+  <!-- Bottom tagline -->
+  <text x="480" y="305" text-anchor="middle" fill="#475569" font-family="system-ui" font-size="11">
+    Agentic AI  ·  Interactive Viewer  ·  Quantitative PET/CT Analysis
+  </text>
+</svg>

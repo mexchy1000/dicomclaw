@@ -6,8 +6,12 @@
     characterizes tumor metabolism, tracer distribution, and treatment response.
   </p>
   <p align="center">
-    <a href="#quick-start">Quick Start</a> · <a href="INSTALL.md">Install Guide</a> · <a href="#skills">Skills</a> · <a href="#license">License</a>
+    <a href="#quick-start">Quick Start</a> · <a href="INSTALL.md">Install Guide</a> · <a href="#skills">Skills</a> · <a href="#reference">Reference</a> · <a href="#license">License</a>
   </p>
+</p>
+
+<p align="center">
+  <img src="assets/hero.svg" alt="DICOMclaw Architecture Overview" width="100%"/>
 </p>
 
 ---
@@ -206,6 +210,27 @@ The Python agent communicates with the Node.js backend via stderr markers:
 [REACT:PLAN]      multi-step plan         → triggers approval UI
 [REACT:OVERLAY]   {"study_uid":...}       → VOI overlay on viewer
 [REACT:PROGRESS]  {"percent":50,...}      → progress bar update
+```
+
+---
+
+## Reference
+
+If you use DICOMclaw in your research, please cite:
+
+> **End-to-End PET/CT Interpretation and Quantification with an LLM-Orchestrated AI Agent: A Real-World Pilot Study**
+> Hongyoon Choi, Sungwoo Bae, Kwon Joong Na
+> *medRxiv* 2026. DOI: [10.64898/2026.02.21.26346798](https://doi.org/10.64898/2026.02.21.26346798)
+
+```bibtex
+@article{choi2026dicomclaw,
+  title   = {End-to-End PET/CT Interpretation and Quantification with an
+             LLM-Orchestrated AI Agent: A Real-World Pilot Study},
+  author  = {Choi, Hongyoon and Bae, Sungwoo and Na, Kwon Joong},
+  journal = {medRxiv},
+  year    = {2026},
+  doi     = {10.64898/2026.02.21.26346798}
+}
 ```
 
 ---
