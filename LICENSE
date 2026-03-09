@@ -1,0 +1,63 @@
+Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)
+
+Copyright (c) 2026 mexchy1000
+
+You are free to:
+  - Share — copy and redistribute the material in any medium or format
+  - Adapt — remix, transform, and build upon the material
+
+Under the following terms:
+  - Attribution — You must give appropriate credit, provide a link to the license,
+    and indicate if changes were made.
+  - NonCommercial — You may not use the material for commercial purposes.
+  - No additional restrictions — You may not apply legal terms or technological
+    measures that legally restrict others from doing anything the license permits.
+
+Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+================================================================================
+THIRD-PARTY LICENSES
+================================================================================
+
+This project uses the following third-party software. Each component retains
+its original license.
+
+1. nnU-Net v2 (MIC-DKFZ/nnUNet)
+   License: Apache License 2.0
+   Copyright: Division of Medical Image Computing, German Cancer Research Center (DKFZ)
+   URL: https://github.com/MIC-DKFZ/nnUNet
+   Usage: Base framework for AutoPET-3 lesion detection model
+
+2. AutoPET-3 LesionTracer (MIC-DKFZ/autopet-3-submission)
+   License: Apache License 2.0
+   Copyright: Division of Medical Image Computing, German Cancer Research Center (DKFZ)
+   URL: https://github.com/MIC-DKFZ/autopet-3-submission
+   Usage: Whole-body PET/CT lesion segmentation model
+
+3. TotalSegmentator (wasserth/TotalSegmentator)
+   License: Apache License 2.0
+   Copyright: Jakob Wasserthal
+   URL: https://github.com/wasserth/TotalSegmentator
+   Note: Some specialized task models (e.g., brain_aneurysm) may use CC BY-NC 4.0.
+         The default "total" task used by DICOMclaw is Apache 2.0.
+   Usage: Organ segmentation from CT volumes
+
+4. Cornerstone3D (cornerstonejs/cornerstone3D)
+   License: MIT License
+   Copyright: Open Health Imaging Foundation
+   URL: https://github.com/cornerstonejs/cornerstone3D
+   Usage: DICOM image rendering and viewport management in the web viewer
+
+5. PyTorch
+   License: BSD-3-Clause
+   Copyright: Meta Platforms, Inc. and affiliates
+   URL: https://github.com/pytorch/pytorch
+   Usage: Deep learning inference backend
+
+6. scikit-image
+   License: BSD-3-Clause
+   Copyright: the scikit-image team
+   URL: https://github.com/scikit-image/scikit-image
+   Usage: GLCM texture feature computation and contour extraction
+
+================================================================================

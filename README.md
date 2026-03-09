@@ -145,4 +145,17 @@ Place DICOM studies in `data/studies/` and start the server. The auto-indexer ru
 
 ## License
 
-MIT
+This project is licensed under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) (Creative Commons Attribution-NonCommercial 4.0).
+
+### Third-Party Licenses
+
+| Component | License | Copyright |
+|---|---|---|
+| [nnU-Net v2](https://github.com/MIC-DKFZ/nnUNet) | Apache 2.0 | DKFZ, Heidelberg |
+| [AutoPET-3 LesionTracer](https://github.com/MIC-DKFZ/autopet-3-submission) | Apache 2.0 | DKFZ, Heidelberg |
+| [TotalSegmentator](https://github.com/wasserth/TotalSegmentator) | Apache 2.0 | Jakob Wasserthal |
+| [Cornerstone3D](https://github.com/cornerstonejs/cornerstone3D) | MIT | Open Health Imaging Foundation |
+| [PyTorch](https://github.com/pytorch/pytorch) | BSD-3-Clause | Meta Platforms |
+| [scikit-image](https://github.com/scikit-image/scikit-image) | BSD-3-Clause | scikit-image team |
+
+See [LICENSE](LICENSE) for full details.
