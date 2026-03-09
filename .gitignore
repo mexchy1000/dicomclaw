@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+web-ui/node_modules/
+
+# Build output
+dist/
+web-ui/dist/
+
+# Data & results (user-specific)
+data/studies/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+results/
+logs/
+
+# Model weights (large binaries)
+weights/
+
+# Environment & secrets
+.env
+!.env.example
+
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+
+# Claude Code project config
+CLAUDE.md
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

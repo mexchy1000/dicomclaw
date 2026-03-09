@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>Cornerstone Test</title></head>
+<body style="background:#000;color:#fff;font-family:monospace;padding:20px">
+<h3>Cornerstone3D Minimal Test</h3>
+<div id="log" style="white-space:pre-wrap;font-size:12px;margin-bottom:10px"></div>
+<div id="viewport" style="width:512px;height:512px;border:2px solid #333;background:#111"></div>
+<script type="module">
+const log = (msg) => {
+  document.getElementById('log').textContent += msg + '\n';
+  console.log(msg);
+};
+
+try {
+  log('1. Importing modules...');
+
+  const cs = await import('/node_modules/@cornerstonejs/core/dist/esm/index.js');
+  log('   core imported: ' + !!cs.init);
+
+  // Try initializing core
+  log('2. Initializing core...');
+  await cs.init({ rendering: { preferSizeOverAccuracy: true }, debug: {} });
+  log('   core init done, CPU rendering: ' + cs.getShouldUseCPURendering());
+
+} catch(e) {
+  log('ERROR: ' + e.message);
+  log(e.stack);
+}
+</script>
+</body>
+</html>

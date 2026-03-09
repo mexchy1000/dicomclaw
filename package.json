@@ -1,0 +1,36 @@
+{
+  "name": "dicomclaw",
+  "version": "0.1.0",
+  "description": "DICOM-based Medical Image Quantitative Analysis Agent",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "build:ui": "cd web-ui && npm run build",
+    "dev:ui": "cd web-ui && npm run dev",
+    "typecheck": "tsc --noEmit",
+    "setup": "bash scripts/setup.sh"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
