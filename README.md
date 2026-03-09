@@ -1,9 +1,9 @@
 <p align="center">
   <h1 align="center">DICOMclaw</h1>
   <p align="center">
-    <strong>An agentic AI framework for PET imaging</strong><br>
-    Explores whole-body scans, integrates multimodal patient data, and quantitatively<br>
-    characterizes tumor metabolism, tracer distribution, and treatment response.
+    <strong>An agentic AI framework for mutimodal fusion imaging</strong><br>
+    Explores 3d medical image scans, integrates multimodal imaging data (e.g PET/CT), and quantitatively<br>
+    characterizes lesions/organs, tracer distribution, and treatment response by Agentic AI
   </p>
   <p align="center">
     <a href="#quick-start">Quick Start</a> · <a href="INSTALL.md">Install Guide</a> · <a href="#skills">Skills</a> · <a href="#reference">Reference</a> · <a href="#license">License</a>
@@ -19,7 +19,7 @@
 
 ## Why DICOMclaw?
 
-Traditional PET/CT workflows involve switching between multiple tools — viewers, segmentation software, spreadsheets, and reporting systems. **DICOMclaw unifies everything into a single interactive workspace** where you converse with an AI agent that sees what you see, operates directly on your imaging data, and presents results back into the viewer in real time.
+Traditional fusion image workflows involve switching between multiple tools — viewers, segmentation software, spreadsheets, and reporting systems. **DICOMclaw unifies everything into a single interactive workspace** where you converse with an AI agent that sees what you see, operates directly on your imaging data, and presents results back into the viewer in real time.
 
 > *"Segment the liver and calculate SUV"* → The agent plans, segments, quantifies, overlays the result on your viewer, and summarizes — all in one conversation turn.
 
@@ -169,12 +169,12 @@ Each skill has a companion guide (`analysis/skills/guides/<skill>.md`) injected 
 
 Environment variables (`.env`):
 
-| Variable | Default | Description |
+| Variable | Model | Description |
 |----------|---------|-------------|
 | `OPENROUTER_API_KEY` | *(required)* | OpenRouter API key |
-| `OPENROUTER_MODEL` | `z-ai/glm-5` | Agent reasoning model |
-| `VISION_MODEL` | `moonshotai/kimi-k2.5` | Vision interpretation model |
-| `CHAT_MODEL` | `google/gemini-3.1-flash-lite-preview` | Direct chat model |
+| `OPENROUTER_MODEL` | (Agentic AI model) | Agent reasoning model |
+| `VISION_MODEL` | (Vision-Language Model for Interpretation) | Vision interpretation model |
+| `CHAT_MODEL` | (Vision-Language Model for Chat mode) | Direct chat model |
 | `PORT` | `8411` | Server port |
 
 All models are also configurable via the **Settings UI** at runtime.
