@@ -128,6 +128,21 @@
       opacity: 0.18;
     }
 
+    .hero-bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 110%;
+      max-width: 1400px;
+      border-radius: 20px;
+      opacity: 0.12;
+      filter: brightness(0.5) saturate(0.3);
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
+    }
+
     .hero-pill {
       display: inline-flex;
       align-items: center;
@@ -215,30 +230,6 @@
     }
     .btn-ghost:hover { border-color: var(--text-dim); color: var(--text); }
 
-    /* ── Hero Image ── */
-    .hero-image {
-      max-width: 1000px;
-      width: 100%;
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      position: relative;
-    }
-
-    .hero-image::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: var(--radius);
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-      pointer-events: none;
-    }
-
-    .hero-image img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
 
     /* ── Section ── */
     section { padding: 120px 0; }
@@ -639,48 +630,8 @@
 
   <!-- Hero -->
   <section class="hero">
-    <!-- Animated orbital background -->
-    <svg class="hero-bg-canvas" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Orbital rings -->
-      <g opacity="0.6">
-        <ellipse cx="400" cy="400" rx="320" ry="120" stroke="#38bdf8" stroke-width="0.5" transform="rotate(-20 400 400)">
-          <animateTransform attributeName="transform" type="rotate" from="0 400 400" to="360 400 400" dur="60s" repeatCount="indefinite"/>
-        </ellipse>
-        <ellipse cx="400" cy="400" rx="280" ry="160" stroke="#38bdf8" stroke-width="0.4" transform="rotate(40 400 400)">
-          <animateTransform attributeName="transform" type="rotate" from="360 400 400" to="0 400 400" dur="45s" repeatCount="indefinite"/>
-        </ellipse>
-        <ellipse cx="400" cy="400" rx="350" ry="90" stroke="#6eb1ff" stroke-width="0.3" transform="rotate(70 400 400)">
-          <animateTransform attributeName="transform" type="rotate" from="0 400 400" to="360 400 400" dur="80s" repeatCount="indefinite"/>
-        </ellipse>
-        <ellipse cx="400" cy="400" rx="240" ry="200" stroke="#c4a1ff" stroke-width="0.3">
-          <animateTransform attributeName="transform" type="rotate" from="360 400 400" to="0 400 400" dur="70s" repeatCount="indefinite"/>
-        </ellipse>
-        <ellipse cx="400" cy="400" rx="380" ry="60" stroke="#38bdf8" stroke-width="0.25" transform="rotate(-50 400 400)">
-          <animateTransform attributeName="transform" type="rotate" from="0 400 400" to="360 400 400" dur="90s" repeatCount="indefinite"/>
-        </ellipse>
-      </g>
-      <!-- Floating dots on orbits -->
-      <g>
-        <circle r="3" fill="#38bdf8" opacity="0.5">
-          <animateMotion dur="60s" repeatCount="indefinite" path="M80,400 A320,120 -20 1,1 80,400.01"/>
-        </circle>
-        <circle r="2.5" fill="#6eb1ff" opacity="0.4">
-          <animateMotion dur="45s" repeatCount="indefinite" path="M120,400 A280,160 40 1,0 120,400.01"/>
-        </circle>
-        <circle r="2" fill="#c4a1ff" opacity="0.4">
-          <animateMotion dur="70s" repeatCount="indefinite" path="M160,400 A240,200 0 1,0 160,400.01"/>
-        </circle>
-        <circle r="3.5" fill="#38bdf8" opacity="0.3">
-          <animateMotion dur="80s" repeatCount="indefinite" path="M50,400 A350,90 70 1,1 50,400.01"/>
-        </circle>
-      </g>
-      <!-- Center glow -->
-      <radialGradient id="center-glow">
-        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.15"/>
-        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
-      </radialGradient>
-      <circle cx="400" cy="400" r="150" fill="url(#center-glow)"/>
-    </svg>
+    <!-- Dark GIF background -->
+    <img class="hero-bg-video" src="https://raw.githubusercontent.com/mexchy1000/dicomclaw/main/docs/DICOMclaw_intro_GIF.gif" alt="">
 
     <div class="hero-pill">
       <span class="dot"></span>
@@ -704,9 +655,6 @@
       <a href="#how-it-works" class="btn btn-ghost">See How It Works</a>
     </div>
 
-    <div class="hero-image">
-      <img src="https://github.com/user-attachments/assets/874f5c23-0eae-4568-8a80-b593fda5d0fb" alt="DICOMclaw interface">
-    </div>
   </section>
 
   <div class="divider"></div>
@@ -880,7 +828,7 @@
           </div>
         </div>
         <div class="how-visual">
-          <img src="https://github.com/user-attachments/assets/dd351a4a-cd78-40ea-9862-2b2a1281a539" alt="DICOMclaw conversational reading">
+          <img src="https://github.com/user-attachments/assets/874f5c23-0eae-4568-8a80-b593fda5d0fb" alt="DICOMclaw interactive viewer and chat">
         </div>
       </div>
     </div>
