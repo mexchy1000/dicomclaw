@@ -128,20 +128,22 @@
       opacity: 0.18;
     }
 
-    .hero-bg-video {
+    .hero-bg-anim {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 110%;
-      max-width: 1400px;
-      border-radius: 20px;
-      opacity: 0.3;
-      filter: brightness(0.7) saturate(0.5);
+      width: 800px;
+      height: 800px;
       pointer-events: none;
-      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
-      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 100%);
+      opacity: 0.15;
     }
+
+    @keyframes float1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,-40px) scale(1.1); } }
+    @keyframes float2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-50px,50px) scale(0.9); } }
+    @keyframes float3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(40px,60px) scale(1.05); } }
+    @keyframes float4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-70px,-30px); } }
+    @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
     .hero-pill {
       display: inline-flex;
@@ -630,8 +632,37 @@
 
   <!-- Hero -->
   <section class="hero">
-    <!-- Dark GIF background -->
-    <img class="hero-bg-video" src="https://raw.githubusercontent.com/mexchy1000/dicomclaw/main/docs/DICOMclaw_intro_GIF.gif" alt="">
+    <!-- Abstract floating shapes -->
+    <div class="hero-bg-anim">
+      <svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Gradient defs -->
+        <defs>
+          <radialGradient id="g1"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></radialGradient>
+          <radialGradient id="g2"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.35"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+          <radialGradient id="g3"><stop offset="0%" stop-color="#6eb1ff" stop-opacity="0.3"/><stop offset="100%" stop-color="#6eb1ff" stop-opacity="0"/></radialGradient>
+          <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.15"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0.15"/></linearGradient>
+        </defs>
+        <!-- Large blobs -->
+        <circle cx="350" cy="350" r="200" fill="url(#g1)" style="animation: float1 20s ease-in-out infinite"/>
+        <circle cx="500" cy="450" r="180" fill="url(#g2)" style="animation: float2 25s ease-in-out infinite"/>
+        <circle cx="300" cy="500" r="150" fill="url(#g3)" style="animation: float3 18s ease-in-out infinite"/>
+        <!-- Orbital rings -->
+        <g style="animation: spin-slow 60s linear infinite; transform-origin: 400px 400px;">
+          <ellipse cx="400" cy="400" rx="300" ry="100" stroke="#38bdf8" stroke-width="0.5" fill="none" opacity="0.5"/>
+        </g>
+        <g style="animation: spin-slow 45s linear infinite reverse; transform-origin: 400px 400px;">
+          <ellipse cx="400" cy="400" rx="250" ry="150" stroke="#a78bfa" stroke-width="0.4" fill="none" opacity="0.4" transform="rotate(60 400 400)"/>
+        </g>
+        <g style="animation: spin-slow 70s linear infinite; transform-origin: 400px 400px;">
+          <ellipse cx="400" cy="400" rx="340" ry="70" stroke="#6eb1ff" stroke-width="0.3" fill="none" opacity="0.35" transform="rotate(-30 400 400)"/>
+        </g>
+        <!-- Small floating dots -->
+        <circle cx="250" cy="300" r="3" fill="#38bdf8" opacity="0.6" style="animation: float4 12s ease-in-out infinite"/>
+        <circle cx="550" cy="350" r="2.5" fill="#a78bfa" opacity="0.5" style="animation: float1 15s ease-in-out infinite"/>
+        <circle cx="400" cy="250" r="2" fill="#6eb1ff" opacity="0.5" style="animation: float2 10s ease-in-out infinite"/>
+        <circle cx="480" cy="550" r="3" fill="#38bdf8" opacity="0.4" style="animation: float3 14s ease-in-out infinite"/>
+      </svg>
+    </div>
 
     <div class="hero-pill">
       <span class="dot"></span>
@@ -828,7 +859,7 @@
           </div>
         </div>
         <div class="how-visual">
-          <img src="https://github.com/user-attachments/assets/874f5c23-0eae-4568-8a80-b593fda5d0fb" alt="DICOMclaw interactive viewer and chat">
+          <img src="https://raw.githubusercontent.com/mexchy1000/dicomclaw/main/docs/DICOMclaw_intro_GIF.gif" alt="DICOMclaw demo — interactive viewer and agent conversation">
         </div>
       </div>
     </div>
